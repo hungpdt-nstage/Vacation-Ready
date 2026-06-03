@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vacation, Ready!! - Catch Food with Waifu</title>
+    <!-- Nhúng Google Fonts để giao diện hiện đại, dễ thương -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Style chính của trò chơi -->
+    <link rel="stylesheet" href="css/style.css?v=20260603v4">
+</head>
+<body>
+    <!-- Background mây hoặc màu gradient động qua CSS -->
+    <div class="bg-gradient-dynamic"></div>
+
+    <div class="game-wrapper">
+        <!-- ================= MÀN HÌNH BẮT ĐẦU (START SCREEN) ================= -->
+        <div id="start-screen" class="screen active">
+            <h1 class="game-title">Vacation, Ready!!</h1>
+            <p class="game-subtitle">Catch falling food to unlock secret outfits for your Waifu! 🍓🍙🍰</p>
+            
+            <div class="menu-buttons">
+                <button id="btn-goto-select" class="btn btn-primary btn-bounce">Play Now</button>
+                <button id="btn-show-leaderboard" class="btn btn-secondary">Leaderboard</button>
+            </div>
+
+            
+            <div class="quick-instructions">
+                <h3>How to Play:</h3>
+                <p>Move your mouse or swipe the screen to control the basket. Avoid bombs 💣 and red peppers 🌶️! Don't let the food drop!</p>
+            </div>
+        </div>
+
+        <!-- ================= MÀN HÌNH CHỌN NHÂN VẬT (CHARACTER SELECT) ================= -->
+        <div id="char-select-screen" class="screen">
+            <h2 class="screen-title">Choose Your Waifu</h2>
+            <p class="screen-subtitle">Each waifu has a unique personality and reactions when you score points~</p>
+            
+            <div class="character-grid">
+                <!-- Hana Card -->
+                <div class="char-card" data-char="hana">
+                    <div class="char-avatar hana-bg">🌸</div>
+                    <h3 class="char-name">Hana</h3>
+                    <p class="char-personality">Cute / Sweet</p>
+                    <p class="char-desc">Fluffy pink hair, gentle and cute personality. Loves strawberries!</p>
+                    <button class="btn btn-select-char hana-btn">Choose Hana</button>
+                </div>
+                
+                <!-- Yuki Card -->
+                <div class="char-card" data-char="yuki">
+                    <div class="char-avatar yuki-bg">❄️</div>
+                    <h3 class="char-name">Yuki</h3>
+                    <p class="char-personality">Cool / Stoic</p>
+                    <p class="char-desc">Cool and quiet, but secretly cares about others. Will open up at high scores!</p>
+                    <button class="btn btn-select-char yuki-btn">Choose Yuki</button>
+                </div>
+                
+                <!-- Akane Card -->
+                <div class="char-card" data-char="akane">
+                    <div class="char-avatar akane-bg">🔥</div>
+                    <h3 class="char-name">Akane</h3>
+                    <p class="char-personality">Active / Playful</p>
+                    <p class="char-desc">Bright orange hair, loves playing and teasing you. Full of energy!</p>
+                    <button class="btn btn-select-char akane-btn">Choose Akane</button>
+                </div>
+            </div>
+
+            <button id="btn-back-to-start" class="btn btn-text">Back</button>
+        </div>
+
+        <!-- ================= MÀN HÌNH CHƠI GAME CHÍNH (GAME SCREEN) ================= -->
+        <div id="game-screen" class="screen">
+            <!-- HUD hiển thị thông tin phía trên -->
+            <div class="game-hud">
+                <div class="hud-item score-box">
+                    <span class="hud-label">Score:</span>
+                    <span id="hud-score" class="hud-val">0</span>
+                </div>
+                <div class="hud-item combo-box">
+                    <span class="hud-label">Combo:</span>
+                    <span id="hud-combo" class="hud-val">0</span>
+                </div>
+                <div class="hud-item milestone-box">
+                    <span class="hud-label">Milestone:</span>
+                    <span id="hud-milestone" class="hud-val">1/5</span>
+                </div>
+                <div class="hud-item lives-box">
+                    <span id="hud-lives-hearts" class="hearts-container">❤️❤️❤️❤️❤️</span>
+                </div>
+                <div class="hud-item audio-box">
+                    <button id="btn-toggle-audio" class="btn-audio" title="Mute/Unmute">🔊</button>
+                </div>
+            </div>
+
+            <!-- Bố cục Dual-Canvas -->
+            <div class="canvas-container">
+                <!-- Canvas Game (Hứng thức ăn) -->
+                <div class="canvas-wrapper game-canvas-wrapper">
+                    <canvas id="gameCanvas" width="450" height="600"></canvas>
+                </div>
+
+                <!-- Canvas Waifu (Hiển thị Waifu & Dialog) -->
+                <div class="canvas-wrapper waifu-canvas-wrapper">
+                    <canvas id="waifuCanvas" width="320" height="600"></canvas>
+                </div>
+            </div>
+
+            <!-- Nút tạm dừng / thoát nhanh -->
+            <div class="game-controls-overlay">
+                <button id="btn-game-back-select" class="btn btn-secondary-sm">Change Waifu</button>
+                <button id="btn-game-quit" class="btn btn-danger-sm">Quit</button>
+            </div>
+        </div>
+
+        <!-- ================= MÀN HÌNH GAME OVER (GAME OVER SCREEN) ================= -->
+        <div id="game-over-screen" class="screen">
+            <h2 class="game-over-title">Game Over</h2>
+            <p id="game-over-verdict" class="game-over-subtitle">You scored 0 points!</p>
+            
+            <div class="score-submission">
+                <p>Save your score to the leaderboard:</p>
+                <div class="input-group">
+                    <input type="text" id="player-name-input" placeholder="Your name..." maxlength="15">
+                    <button id="btn-submit-score" class="btn btn-primary">Submit</button>
+                </div>
+                <p id="submission-status" class="status-text"></p>
+            </div>
+
+            <!-- Bảng xếp hạng -->
+            <div class="leaderboard-section">
+                <h3>Top Players Leaderboard</h3>
+                <div id="leaderboard-loader" class="loader-text" style="display: none;">Loading leaderboard...</div>
+                <ul id="leaderboard-list" class="leaderboard-list">
+                    <!-- Sẽ được thêm tự động bằng Javascript -->
+                </ul>
+                <p id="leaderboard-mode-tag" class="mode-tag"></p>
+            </div>
+
+            <div class="menu-buttons">
+                <button id="btn-restart-game" class="btn btn-primary btn-bounce">Play Again</button>
+                <button id="btn-home-from-over" class="btn btn-secondary">Home</button>
+            </div>
+        </div>
+
+        <!-- ================= MÀN HÌNH XEM BẢNG XẾP HẠNG TỪ MENU CHÍNH ================= -->
+        <div id="leaderboard-overlay-screen" class="screen">
+            <h2 class="screen-title">Global Leaderboard</h2>
+            <div class="leaderboard-section container-bg">
+                <ul id="global-leaderboard-list" class="leaderboard-list">
+                    <!-- Tải dữ liệu -->
+                </ul>
+            </div>
+            <button id="btn-close-leaderboard" class="btn btn-secondary">Back</button>
+        </div>
+    </div>
+
+    <!-- Nhúng các file script (có cache-busting) -->
+    <script src="js/waifu.js?v=20260603v4"></script>
+    <script src="js/game.js?v=20260603v4" type="module"></script>
+</body>
+</html>

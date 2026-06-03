@@ -1,0 +1,31 @@
+HƯỚNG DẪN THÊM NHẠC NỀN & ÂM THANH LOCAL CHO GAME
+===================================================
+
+Bạn có thể chép các file âm thanh MP3 của bạn trực tiếp vào thư mục `sounds` này. Game sẽ tự động ưu tiên phát các file nhạc local này trước. Nếu không có file local, game mới tự động phát nhạc dự phòng từ internet (CDN) hoặc tự tổng hợp nhạc bằng Web Audio API.
+
+1. ĐỐI VỚI NHẠC NỀN BGM (BACKGROUND MUSIC):
+--------------------------------------------
+- Nhạc nền ở màn hình chờ (Menu BGM):
+  Hãy đổi tên file nhạc của bạn thành: menu_bgm.mp3
+  Đường dẫn file chính xác: sounds/menu_bgm.mp3
+
+- Nhạc nền khi đang chơi (Gameplay BGM):
+  Hãy đổi tên file nhạc của bạn thành: game_bgm.mp3
+  Đường dẫn file chính xác: sounds/game_bgm.mp3
+
+
+2. ĐỐI VỚI CÁC HIỆU ỨNG ÂM THANH KHÁC (TÙY CHỌN):
+-------------------------------------------------
+Nếu muốn, bạn cũng có thể thay thế các hiệu ứng âm thanh trong game bằng cách đặt các file MP3 tương ứng vào đây:
+- Âm thanh khi hứng trúng đồ ăn: sounds/catch.mp3
+- Âm thanh khi dính bom/ớt: sounds/bomb.mp3
+- Âm thanh khi đạt mốc điểm cao (Milestone): sounds/milestone.mp3
+- Âm thanh khi thua cuộc (Game Over): sounds/gameover.mp3
+
+
+3. GIỌNG NÓI NHÂN VẬT ANIME (TÙY CHỌN):
+----------------------------------------
+Bạn cũng có thể thêm giọng nói thực tế của các Waifu bằng cách thêm các tệp sau:
+- Giọng nói của Hana: sounds/hana_voice.mp3
+- Giọng nói của Yuki: sounds/yuki_voice.mp3
+- Giọng nói của Akane: sounds/akane_voice.mp3

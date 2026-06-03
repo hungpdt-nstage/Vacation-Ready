@@ -1,0 +1,719 @@
+/* ================= STYLE CHÍNH CHO GAME WAIFU FOOD CATCH! ================= */
+
+/* Định nghĩa hệ màu Pastel & Biến toàn cục */
+:root {
+    --bg-primary: #fff5f6;       /* Hồng sữa cực nhẹ */
+    --color-pink: #ffb7c5;       /* Hồng pastel đào */
+    --color-pink-dark: #f08a9c;  /* Hồng đậm */
+    --color-teal: #a2e8dd;       /* Xanh ngọc pastel */
+    --color-teal-dark: #68c0b2;
+    --color-blue: #b3cde3;       /* Xanh dương pastel */
+    --color-indigo: #8c96c6;     /* Tím indigo pastel */
+    --color-orange: #fddaec;     /* Dùng cho các chi tiết nhạt */
+    --color-peach: #fdbb84;      /* Cam pastel đào */
+    --color-peach-dark: #e34a33;
+    
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --bg-glass: rgba(255, 255, 255, 0.45);
+    --border-radius-lg: 24px;
+    --border-radius-md: 16px;
+    --border-radius-sm: 8px;
+    
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Quicksand', sans-serif;
+    --box-shadow-soft: 0 10px 30px rgba(240, 138, 156, 0.15);
+    --box-shadow-active: 0 5px 15px rgba(240, 138, 156, 0.3);
+}
+
+/* Reset CSS */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background-color: var(--bg-primary);
+    font-family: var(--font-body);
+    color: #4a4a4a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Background Động */
+.bg-gradient-dynamic {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background: linear-gradient(135deg, #ffeef0 0%, #e8f5ff 50%, #e6f9f5 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 20s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Vùng chứa game chính */
+.game-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    min-height: 775px;
+    margin: 10px;
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow-soft);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CSS Cho các màn hình (Screen Routing) */
+.screen {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: scale(0.95);
+    z-index: 1;
+}
+
+.screen.active {
+    display: flex;
+    opacity: 1;
+    transform: scale(1);
+    z-index: 10;
+}
+
+/* ================= ĐỒ HỌA MÀN HÌNH BẮT ĐẦU ================= */
+.game-title {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-pink-dark);
+    text-shadow: 3px 3px 0px #fff, 6px 6px 0px rgba(240, 138, 156, 0.15);
+    margin-bottom: 10px;
+    text-align: center;
+    animation: floatingTitle 3s ease-in-out infinite;
+}
+
+@keyframes floatingTitle {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.game-subtitle {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #7b7b7b;
+    margin-bottom: 40px;
+    max-width: 500px;
+    line-height: 1.5;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 280px;
+    margin-bottom: 30px;
+}
+
+.quick-instructions {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: var(--border-radius-md);
+    padding: 15px 20px;
+    max-width: 500px;
+    text-align: center;
+    border: 1px dashed var(--color-pink);
+}
+
+.quick-instructions h3 {
+    font-size: 0.95rem;
+    color: var(--color-pink-dark);
+    margin-bottom: 5px;
+}
+
+.quick-instructions p {
+    font-size: 0.85rem;
+    color: #6a6a6a;
+    line-height: 1.4;
+}
+
+/* ================= THIẾT KẾ NÚT BẤM (BUTTONS) ================= */
+.btn {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    outline: none;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--color-pink);
+    color: white;
+    border: 2px solid white;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-pink-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-active);
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #6a6a6a;
+    border: 2px solid #e1e1e1;
+}
+
+.btn-secondary:hover {
+    background-color: #f7f7f7;
+    color: #4a4a4a;
+    transform: translateY(-2px);
+}
+
+.btn-text {
+    background: transparent;
+    color: #8a8a8a;
+    box-shadow: none;
+    padding: 8px 16px;
+    text-decoration: underline;
+    margin-top: 20px;
+}
+
+.btn-text:hover {
+    color: var(--color-pink-dark);
+}
+
+.btn-bounce:hover {
+    animation: btnBounce 0.6s ease infinite;
+}
+
+.btn-danger-sm {
+    background: #ffcbd1;
+    color: #c73e4a;
+    border: 1px solid #ffb3bc;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: var(--border-radius-sm);
+}
+
+.btn-danger-sm:hover {
+    background: #ffb3bc;
+    color: #a62631;
+}
+
+.btn-secondary-sm {
+    background: #ffffff;
+    color: #6a6a6a;
+    border: 1px solid #e1e1e1;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: var(--border-radius-sm);
+    margin-right: 10px;
+}
+
+.btn-secondary-sm:hover {
+    background: #f7f7f7;
+    color: #4a4a4a;
+}
+
+@keyframes btnBounce {
+    0%, 100% { transform: translateY(-2px) scale(1); }
+    50% { transform: translateY(-6px) scale(1.03); }
+}
+
+/* ================= MÀN HÌNH CHỌN NHÂN VẬT ================= */
+.screen-title {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    color: #4a4a4a;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.screen-subtitle {
+    font-size: 0.95rem;
+    color: #8a8a8a;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 20px;
+}
+
+.char-card {
+    background: var(--bg-card);
+    border: 2px solid white;
+    border-radius: var(--border-radius-md);
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--box-shadow-soft);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.char-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(240, 138, 156, 0.2);
+}
+
+.char-card.selected {
+    border-color: var(--color-pink-dark);
+    background: #fff0f2;
+}
+
+.char-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    font-size: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.hana-bg { background-color: #ffeef2; }
+.yuki-bg { background-color: #e8eef4; }
+.akane-bg { background-color: #fffaee; }
+
+.char-name {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+}
+
+.char-personality {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: white;
+    background: #ccc;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.char-card[data-char="hana"] .char-personality { background: var(--color-pink-dark); }
+.char-card[data-char="yuki"] .char-personality { background: #455a64; }
+.char-card[data-char="akane"] .char-personality { background: var(--color-peach-dark); }
+
+.char-desc {
+    font-size: 0.8rem;
+    color: #7a7a7a;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.btn-select-char {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: var(--border-radius-sm);
+    color: white;
+    border: none;
+}
+
+.hana-btn { background-color: var(--color-pink-dark); }
+.hana-btn:hover { background-color: #d16e80; }
+.yuki-btn { background-color: #455a64; }
+.yuki-btn:hover { background-color: #546e7a; }
+.akane-btn { background-color: var(--color-peach-dark); }
+.akane-btn:hover { background-color: #c23823; }
+
+/* ================= MÀN HÌNH CHƠI GAME CHÍNH (HUD & DUAL-CANVAS) ================= */
+#game-screen {
+    padding: 15px;
+    justify-content: flex-start;
+}
+
+.game-hud {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-radius: var(--border-radius-md);
+    padding: 8px 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid rgba(255,255,255,0.8);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.hud-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.hud-label {
+    color: #8a8a8a;
+    margin-right: 5px;
+}
+
+.hud-val {
+    color: #4a4a4a;
+}
+
+#hud-score { color: var(--color-pink-dark); font-size: 1.15rem; }
+#hud-combo { color: var(--color-peach-dark); }
+#hud-milestone { color: var(--color-teal-dark); }
+
+.hearts-container {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.btn-audio {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.2s;
+    outline: none;
+}
+
+.btn-audio:hover {
+    background-color: #f0f0f0;
+}
+
+/* Hiệu ứng rung lắc màn hình khi trúng bom/ớt */
+.screen-shake {
+    animation: screenShake 0.4s ease-in-out;
+}
+
+@keyframes screenShake {
+    0%, 100% { transform: translate(0, 0); }
+    10%, 90% { transform: translate(-3px, 2px); }
+    20%, 80% { transform: translate(3px, -2px); }
+    30%, 50%, 70% { transform: translate(-5px, -3px); }
+    40%, 60% { transform: translate(5px, 3px); }
+}
+
+/* Hiệu ứng nháy đỏ khi va chạm chướng ngại vật */
+.flash-red-active {
+    animation: flashRed 0.3s ease;
+}
+
+@keyframes flashRed {
+    0%, 100% { background-color: transparent; }
+    50% { background-color: rgba(230, 57, 70, 0.2); }
+}
+
+.canvas-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 800px;
+}
+
+.canvas-wrapper {
+    background: #fff;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    border: 2px solid white;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Tránh kéo dãn canvas */
+#gameCanvas, #waifuCanvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    background-color: #fafbfc;
+}
+
+.game-canvas-wrapper {
+    width: 450px;
+    max-width: 450px;
+}
+
+.waifu-canvas-wrapper {
+    width: 320px;
+    max-width: 320px;
+}
+
+.game-controls-overlay {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* ================= MÀN HÌNH GAME OVER ================= */
+.game-over-title {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    color: var(--color-pink-dark);
+    margin-bottom: 5px;
+}
+
+.game-over-subtitle {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #6a6a6a;
+}
+
+.score-submission {
+    background: white;
+    border-radius: var(--border-radius-md);
+    padding: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 25px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.score-submission p {
+    font-size: 0.9rem;
+    color: #7a7a7a;
+    margin-bottom: 10px;
+}
+
+.input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.input-group input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 2px solid #efefef;
+    border-radius: var(--border-radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    border-color: var(--color-pink);
+}
+
+.status-text {
+    font-size: 0.8rem;
+    margin-top: 5px;
+    color: var(--color-pink-dark);
+    font-weight: bold;
+    min-height: 18px;
+}
+
+/* Leaderboard */
+.leaderboard-section {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 25px;
+}
+
+.container-bg {
+    background: white;
+    padding: 20px;
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.leaderboard-section h3 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: #4a4a4a;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.leaderboard-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fbfbfc;
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid #ddd;
+    font-size: 0.9rem;
+}
+
+.leaderboard-item.rank-1 { border-left-color: #ffd700; background: #fffdf5; font-weight: bold; }
+.leaderboard-item.rank-2 { border-left-color: #c0c0c0; background: #fafafa; }
+.leaderboard-item.rank-3 { border-left-color: #cd7f32; background: #fffaf5; }
+
+.leaderboard-rank {
+    font-weight: 800;
+    margin-right: 8px;
+}
+
+.leaderboard-name {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.leaderboard-score {
+    font-weight: 700;
+    color: var(--color-pink-dark);
+}
+
+.loader-text {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #8a8a8a;
+    padding: 10px 0;
+}
+
+.mode-tag {
+    font-size: 0.75rem;
+    color: #a1a1a1;
+    text-align: center;
+    margin-top: 6px;
+}
+
+/* ================= RESPONSIVE LAYOUT (MEDIA QUERIES) ================= */
+
+/* Màn hình nhỏ hơn 768px (Mobile & Tablet dọc) */
+@media (max-width: 768px) {
+    .game-wrapper {
+        min-height: auto;
+        height: 100vh;
+        margin: 0;
+        border-radius: 0;
+        border: none;
+    }
+    
+    .screen {
+        padding: 15px;
+        overflow-y: auto;
+    }
+    
+    .game-title {
+        font-size: 2.2rem;
+    }
+    
+    .character-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        max-height: 60vh;
+        overflow-y: auto;
+        padding: 5px;
+    }
+    
+    .char-card {
+        flex-direction: row;
+        text-align: left;
+        padding: 12px;
+        gap: 12px;
+    }
+    
+    .char-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1.8rem;
+        margin-bottom: 0;
+    }
+    
+    .char-desc {
+        display: none; /* Ẩn bớt mô tả trên mobile để tiết kiệm diện tích */
+    }
+    
+    .char-personality {
+        margin-bottom: 0;
+        display: inline-block;
+    }
+    
+    .btn-select-char {
+        width: auto;
+        margin-left: auto;
+    }
+
+    /* Dual Canvas chuyển thành xếp dọc */
+    .canvas-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        overflow-y: auto;
+        max-height: calc(100vh - 120px);
+    }
+    
+    .game-canvas-wrapper {
+        width: 100%;
+        max-width: 360px; /* Nhỏ hơn trên mobile */
+    }
+    
+    .waifu-canvas-wrapper {
+        width: 100%;
+        max-width: 320px;
+    }
+    
+    #game-screen {
+        padding-top: 5px;
+    }
+    
+    .game-hud {
+        padding: 5px 10px;
+        margin-bottom: 5px;
+    }
+}
+
+
